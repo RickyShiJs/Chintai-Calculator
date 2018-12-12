@@ -5,7 +5,7 @@ For help EOS token holder calculate the best time to stake. https://rickyshijs.g
 
 ## How to use
 
-1. Copy and paste the Next UndelegateBW and Next Refund from Chintai [website](https://eos.chintai.io/exchange).(You can also make it default)
+1. Copy and paste the Next UndelegateBW and Next Refund from [Chintai website](https://eos.chintai.io/exchange).(You can also make it default)
 2. Click the submit button.
 
  ![image](https://github.com/RickyShiJs/Chintai-Calculator/raw/master/sample.png)
