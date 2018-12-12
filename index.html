@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+  </script>
+  <script src="https://cdn.bootcss.com/moment-timezone/0.5.23/moment-timezone.min.js"></script>
+  <script src="https://cdn.bootcss.com/moment-timezone/0.5.23/moment-timezone-with-data-2012-2022.min.js"></script>
+  <style type="text/css">
+    h1,
+    .author {
+      padding-left: 20px;
+    }
+
+    .table {
+      margin-left: 20px;
+      margin-top: 15px;
+    }
+
+    .timeSetting {
+      margin-left: 20px;
+    }
+  </style>
+
+  <title>Chaintai calculator</title>
+
+
+</head>
+
+<body>
+  <h1>Chaintai calculator</h1>
+
+  <div class="timeSetting">
+    <label for="input">Next Undelegate Time</label>
+    <input type="text" id="nextUnstakeTime" placeholder="mm/dd hh:mm" value="12/13 09:15">
+
+    <label for="input">Next Refund</label>
+    <input type="text" id="nextRefundTime" placeholder="mm/dd hh:mm" value="12/13 01:16">
+
+    <button id="submitBtn" class="btn btn-primary">Submit</button>
+    <div>
+      Note: Please input the UTC time which show on chintai website, every time below is UTC format
+    </div>
+
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Time</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody class="tbody">
+    </tbody>
+  </table>
+  <div class="author"> by ricky@eoscannon</div>
+
+</body>
+<script type="text/javascript">
+  var current = new Date();
+  current.setDate((current.getDate() + 7));
+  var sevenD = new Date(current);
+  current.setDate((current.getDate() + 7));
+  var fourteenD = new Date(current);
+  current.setDate((current.getDate() + 7));
+  var twentyoneD = new Date(current);
+  current.setDate((current.getDate() + 7));
+  var twentyeightD = new Date(current);
+
+  $(".7d").html(moment.tz(sevenD, "UTC").format("YYYY-MM-DD HH:mm z"));
+  $(".14d").html(moment.tz(fourteenD, "UTC").format("YYYY-MM-DD HH:mm z"));
+  $(".21d").html(moment.tz(twentyoneD, "UTC").format("YYYY-MM-DD HH:mm z"));
+  $(".28d").html(moment.tz(twentyeightD, "UTC").format("YYYY-MM-DD HH:mm z"));
+
+  $("#submitBtn").click(function() {
+    var nextUnstakeTime = $("#nextUnstakeTime").val();
+    var nextRefundTime = $("#nextRefundTime").val();
+    var year = new Date().getFullYear();
+    var data = []
+    if (!nextUnstakeTime || !nextRefundTime) {
+      alert("please input date");
+    } else {
+      u_date = new Date(year + "/" + nextUnstakeTime + " UTC");
+      r_date = new Date(year + "/" + nextRefundTime + " UTC");
+      if (isNaN(u_date) || isNaN(r_date)) {
+        alert("invalid input date")
+        return;
+      }
+      data.push({
+        time: moment.tz(sevenD, "UTC").format("YYYY-MM-DD HH:mm z"),
+        action: "7D from now",
+        timestamp: sevenD.getTime()
+      })
+      data.push({
+        time: moment.tz(fourteenD, "UTC").format("YYYY-MM-DD HH:mm z"),
+        action: "14D from now",
+        timestamp: fourteenD.getTime()
+      })
+      data.push({
+        time: moment.tz(twentyoneD, "UTC").format("YYYY-MM-DD HH:mm z"),
+        action: "21D from now",
+        timestamp: twentyoneD.getTime()
+      })
+      data.push({
+        time: moment.tz(twentyeightD, "UTC").format("YYYY-MM-DD HH:mm z"),
+        action: "28D from now",
+        timestamp: twentyeightD.getTime()
+      })
+      data.push({
+        time: moment.tz(u_date, "UTC").format("YYYY-MM-DD HH:mm z"),
+        action: "unstake",
+        timestamp: u_date.getTime()
+      });
+      data.push({
+        time: moment.tz(r_date, "UTC").format("YYYY-MM-DD HH:mm z"),
+        action: "refund",
+        timestamp: r_date.getTime()
+      })
+
+      for (var i = 1; i <= 10; i++) {
+        u_date.setHours(u_date.getHours() + 80);
+        r_date.setHours(r_date.getHours() + 80);
+        var entry1 = {
+          time: moment.tz(u_date, "UTC").format("YYYY-MM-DD HH:mm z"),
+          action: "unstake",
+          timestamp: u_date.getTime()
+        }
+        var entry2 = {
+          time: moment.tz(r_date, "UTC").format("YYYY-MM-DD HH:mm z"),
+          action: "refund",
+          timestamp: r_date.getTime()
+        }
+        data.push(entry1);
+        data.push(entry2);
+      }
+      data.sort(function(a, b) {
+        return a.timestamp - b.timestamp;
+      })
+      $.each(data, function(index, value) {
+        var tr = document.createElement("tr");
+        var th = document.createElement("th");
+        var td1 = document.createElement("td");
+        var td2 = document.createElement("td");
+        th.scope = "row";
+        th.innerHTML = index;
+        tr.append(th);
+        td1.innerHTML = value.time;
+        td2.innerHTML = value.action;
+        tr.append(td1);
+        tr.append(td2);
+        $(".tbody").append(tr);
+      })
+
+    }
+  });
+</script>
+
+</html>
