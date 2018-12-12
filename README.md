@@ -1,8 +1,7 @@
 # ChinTai stake/refund calculator
 # ChinTai抵押结算时间计算器
 
-For helper EOS token holder calculate the best time to stake.
-
+For helper EOS token holder calculate the best time to stake. https://rickyshijs.github.io/Chintai-Calculator/
 
 ## How to use
 
